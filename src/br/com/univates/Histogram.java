@@ -10,19 +10,19 @@ import java.util.TreeMap;
 import static java.util.stream.Collectors.*;
 
 public class Histogram {
-    
+
     public static void main(String[] args) throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(System.getProperty("java.class.path") + "/game-reviews.csv"));
         lines = lines.subList(1, lines.size());
 
         Map<String, List<Review>> reviewsYear = lines.stream()
-                                                     .map(Histogram::convertToGame)
+                                                     .map(Histogram::convertToReview)
                                                      .collect(groupingBy(Review::getReleaseYear, TreeMap::new, toList()));
 
         baseHistogram(reviewsYear);
     }
 
-    private static Review convertToGame(String line) {
+    private static Review convertToReview(String line) {
         String[] values = line.split(";");
         return new Review(values[0], values[6], values[2], values[4], Double.parseDouble(values[3]));
     }
