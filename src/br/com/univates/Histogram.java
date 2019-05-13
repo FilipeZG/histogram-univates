@@ -10,7 +10,7 @@ import java.util.TreeMap;
 import static java.util.stream.Collectors.*;
 
 public class Histogram {
-
+    
     public static void main(String[] args) throws Exception {
         List<String> lines = Files.readAllLines(Paths.get(System.getProperty("java.class.path") + "/game-reviews.csv"));
         lines = lines.subList(1, lines.size());
@@ -20,11 +20,33 @@ public class Histogram {
                                                      .collect(groupingBy(Review::getReleaseYear, TreeMap::new, toList()));
 
         baseHistogram(reviewsYear);
+        showYearWithTheBiggestActionGameAmount(reviewsYear);
     }
 
     private static Review convertToReview(String line) {
         String[] values = line.split(";");
         return new Review(values[0], values[6], values[2], values[4], Double.parseDouble(values[3]));
+    }
+
+    private static void showYearWithTheBiggestActionGameAmount(Map<String, List<Review>> reviewsYear) {
+        long biggestActionGamesAmount = 0;
+        String yearBiggestActionGamesAmount = null;
+
+        for (String year : reviewsYear.keySet()) {
+            long actionGamesAmount = reviewsYear.get(year)
+                                                .stream()
+                                                .filter(review -> review.getGenre().equals("Action"))
+                                                .map(Review::getGame)
+                                                .distinct()
+                                                .count();
+
+            if (biggestActionGamesAmount < actionGamesAmount) {
+                biggestActionGamesAmount = actionGamesAmount;
+                yearBiggestActionGamesAmount = year;
+            }
+        }
+
+        System.out.println("Year with the biggest amount of action games: " + yearBiggestActionGamesAmount);
     }
 
     private static void baseHistogram(Map<String, List<Review>> reviewsYear) {
