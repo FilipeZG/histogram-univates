@@ -1,3 +1,3 @@
 # histogram-univates
 
-Autores: Filipe Zonatto Gusson e JEan Augusto Petter.
+Autores: Filipe Zonatto Gusson e Jean Augusto Petter.
